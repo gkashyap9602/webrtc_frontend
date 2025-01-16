@@ -7,7 +7,9 @@ export const Home = () => {
   const [remoteStream, setRemoteStream] = useState(null);
   const [didiIOffer, setDidIOffer] = useState(false);
 
-  useEffect(() => { }, []);
+  useEffect(() => {
+    startCall()
+  }, []);
 
   const startCall = async () => {
     try {
@@ -17,10 +19,12 @@ export const Home = () => {
         alert(streamResponse?.message);
       }
       //after successful fetch get user media
-      setLocalStream(streamResponse?.data);
+      const userStream = streamResponse?.data
+      // console.log(userStream,"streamresdata")
+      setLocalStream(userStream);
 
       //STEP 2: Create peer connection
-      const pc = await WebrtcHelper.createPeerConnection(peerConfiguration);
+      const pc = await WebrtcHelper.createPeerConnection(peerConfiguration, userStream);
       if (!pc.status) {
         alert(pc?.message);
       }

@@ -42,7 +42,6 @@ const createOffer = async (peerConnection) => {
 
 
 const createPeerConnection = (peerConfiguration, localStream, offerObj = null) => { //offer obj is optional
-  //offerObj is optional
   return new Promise(async (resolve, reject) => {
     try {
       //RTCPeerConnection is the thing that creates the connection
@@ -55,15 +54,15 @@ const createPeerConnection = (peerConfiguration, localStream, offerObj = null) =
       addTracksToPeerConnection(localStream, peerConnection);
 
       //STEP 2 : add event listeners for peerconnection state changes
-      peerConnection.onsignalingstatechange = (event) => {
+      peerConnection.addEventListener("signalingstatechange", (event) => {
         // console.log(event, "event-signalingstatechange");
         console.log(peerConnection.signalingState, 'signalingstatechange');
-      };
+      });
 
       //STEP 3 : add event listeners for ice candidates
-      peerConnection.onicecandidate((event) => {
+      peerConnection.addEventListener('icecandidate', (event) => {
         //after setLocalDescription trigger this event and creates Ice Candidate
-        console.log(event, "event-onicecandidate");
+        // console.log(event, "event-onicecandidate");
         if (event.candidate) {
           console.log("New Ice Candidate found!......", event.candidate);
           //     socket.emit("sendIceCandidateToSignalingServer", {
@@ -75,7 +74,7 @@ const createPeerConnection = (peerConfiguration, localStream, offerObj = null) =
       });
 
       //STEP 4 add tracks to the remote stream
-      peerConnection.ontrack((event) => {
+      peerConnection.addEventListener('track', (event) => {
         // console.log(event,'event');
         addTracksToRemoteStream(event.streams[0], remoteStream);
       });
