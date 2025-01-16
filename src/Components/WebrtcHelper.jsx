@@ -1,4 +1,3 @@
-
 const fetchUserMedia = () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -8,13 +7,10 @@ const fetchUserMedia = () => {
       });
       resolve(userstream);
     } catch (err) {
-      // console.error("Error accessing user media:", err);
       console.error("Error accessing user media", err?.message);
-      // setError(err?.message);
-      // alert(err?.message);
       reject(err);
     }
   });
 }; //ends
 
-export default { fetchUserMedia }
+export default { fetchUserMedia };
