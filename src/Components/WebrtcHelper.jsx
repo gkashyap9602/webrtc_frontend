@@ -1,16 +1,15 @@
-const fetchUserMedia = () => {
+const fetchUserMedia = (constraints = { video: true, audio: false }) => {
+  
   return new Promise(async (resolve, reject) => {
     try {
-      const userstream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        // audio: true,
-      });
-      resolve(userstream);
+      const userStream = await navigator.mediaDevices.getUserMedia(constraints);
+      resolve(userStream);
     } catch (err) {
       console.error("Error accessing user media", err?.message);
-      reject(err);
+      reject(err?.message);
     }
   });
-}; //ends
+};
+
 
 export default { fetchUserMedia };

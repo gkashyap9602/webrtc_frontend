@@ -6,7 +6,7 @@ export const Home = () => {
   const [remoteStream, setRemoteStream] = useState(null);
 
   useEffect(() => {
-    WebrtcHelper.fetchUserMedia()
+    WebrtcHelper.fetchUserMedia({ video: true, audio: false })
       .then((stream) => {
         setLocalStream(stream);
       })
