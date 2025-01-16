@@ -15,9 +15,7 @@ export const Home = () => {
     try {
       //STEP 1: Fetch local media stream audio video etc
       const streamResponse = await WebrtcHelper.fetchUserMedia();
-      if (!streamResponse.status) {
-        alert(streamResponse?.message);
-      }
+
       //after successful fetch get user media
       const userStream = streamResponse?.data
       // console.log(userStream,"streamresdata")
@@ -25,20 +23,17 @@ export const Home = () => {
 
       //STEP 2: Create peer connection
       const pc = await WebrtcHelper.createPeerConnection(peerConfiguration, userStream);
-      if (!pc.status) {
-        alert(pc?.message);
-      }
+
       // Set up peer connection with other user
       const { peerConnection, remoteStream } = pc?.data
       setRemoteStream(remoteStream);
 
-      const offerResponse = await WebrtcHelper.createOffer(peerConnection);
-      if (!offerResponse.status) {
-        alert(offerResponse?.message);
-      }
+      await WebrtcHelper.createOffer(peerConnection);
 
     } catch (error) {
-      console.error("Error starting the call:", error);
+      const errMsg = error.message ? error.message : error
+      console.error("Error starting the call:", errMsg);
+      alert(errMsg)
     }
   }//ends
 

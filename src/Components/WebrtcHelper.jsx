@@ -25,18 +25,20 @@ const addTracksToRemoteStream = (stream, remoteStream) => {
 
 
 const createOffer = async (peerConnection) => {
-  try {
-    console.log("Creating offer...")
-    const offer = await peerConnection.createOffer();
-    // console.log(offer,"offer");
-    peerConnection.setLocalDescription(offer);
-    // didIOffer = true;
-    // socket.emit('newOffer', offer); //send offer to signalingServer
-    return showResponse(true, 'offer created successfully', offer, statusCodes.SUCCESS);
-  } catch (err) {
-    // console.log(err, "error offer")
-    return showResponse(false, err?.message, null, statusCodes.ERROR);
-  }
+  return new Promise(async (resolve, reject) => {
+    try {
+      console.log("Creating offer...")
+      const offer = await peerConnection.createOffer();
+      // console.log(offer,"offer");
+      peerConnection.setLocalDescription(offer);
+      // didIOffer = true;
+      // socket.emit('newOffer', offer); //send offer to signalingServer
+      return resolve(true, 'offer created successfully', offer, statusCodes.SUCCESS);
+    } catch (err) {
+      // console.log(err, "error offer")
+      return reject(false, err?.message, null, statusCodes.ERROR);
+    }
+  })
 }; //ends
 
 
