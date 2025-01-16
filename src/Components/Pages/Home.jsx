@@ -1,45 +1,71 @@
 import React, { useEffect, useState } from "react";
 import style from "./home.css";
-import WebrtcHelper from "../WebrtcHelper";
+import * as WebrtcHelper from "../WebrtcHelper";
+import { peerConfiguration } from "../../Constant.js/Constant";
 export const Home = () => {
   const [localStream, setLocalStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
+  const [didiIOffer, setDidIOffer] = useState(false);
 
-  useEffect(() => {
-    WebrtcHelper.fetchUserMedia({ video: true, audio: false })
-      .then((stream) => {
-        setLocalStream(stream);
-      })
-      .catch((err) => {
-        console.log(err, "err");
-        alert(err?.message);
-      });
+  useEffect(() => { }, []);
 
-    //when user visit the route get the user media camera audio video etc
-  }, []);
+  const startCall = async () => {
+    try {
+      //STEP 1: Fetch local media stream audio video etc
+      const streamResponse = await WebrtcHelper.fetchUserMedia();
+      if (!streamResponse.status) {
+        alert(streamResponse?.message);
+      }
+      //after successful fetch get user media
+      setLocalStream(streamResponse?.data);
+
+      //STEP 2: Create peer connection
+      const pc = await WebrtcHelper.createPeerConnection(peerConfiguration);
+      if (!pc.status) {
+        alert(pc?.message);
+      }
+      // Set up peer connection with other user
+      const { peerConnection, remoteStream } = pc?.data
+      setRemoteStream(remoteStream);
+
+      const offerResponse = await WebrtcHelper.createOffer(peerConnection);
+      if (!offerResponse.status) {
+        alert(offerResponse?.message);
+      }
+
+    } catch (error) {
+      console.error("Error starting the call:", error);
+    }
+  }//ends
 
   return (
     <div>
       <div className="videos">
         <div className="video-wrapper">
+          {/* video player 1 */}
           <video
             autoPlay
             playsInline
             muted
-            // src={localStream}
-            ref={(video) => {
-              if (video && localStream) {
-                video.srcObject = localStream;
-              }
-            }}
             className="local-video"
             id="video-player"
+            ref={(video) => {
+              if (video && localStream) {
+                video.srcObject = localStream; // add local stream to the video player
+              }
+            }}
           />
+          {/* video player 2 */}
           <video
             autoPlay
             playsInline
             className="remote-video"
             id="video-player"
+            ref={(video) => {
+              if (video && remoteStream) {
+                video.srcObject = remoteStream; // add local stream to the video player
+              }
+            }}
           />
         </div>
       </div>
