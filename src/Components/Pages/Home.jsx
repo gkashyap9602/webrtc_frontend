@@ -15,7 +15,10 @@ export const Home = () => {
 
   useEffect(() => {
     const socket = initializeSocket(io);
-    socket.on("ready", startCall); // Example: listen for signaling readiness
+    socket.on("connect", () => {
+        console.log("Socket connected successfully with ID:", socket.id);
+        startCall()
+    });
 
     return () => {
       socket.disconnect(); // Clean up on component unmount
@@ -34,6 +37,7 @@ export const Home = () => {
 
 
   const startCall = async () => {
+    console.log("start the call")
     try {
       //STEP 1: Fetch local media stream audio video etc
       const streamResponse = await WebrtcHelper.fetchUserMedia();
