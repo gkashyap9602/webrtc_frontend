@@ -12,8 +12,8 @@ const fetchUserMedia = (constraints = { video: true, audio: false }) => {
   });
 }; //ends
 
-const addTracksToPeerConnection = (stream, peerConnection) => {
-  stream.getTracks().forEach((track) => peerConnection.addTrack(track, stream));
+const addTracksToPeerConnection = (localStream, peerConnection) => {
+  localStream.getTracks().forEach((track) => peerConnection.addTrack(track, localStream));
 }; //ends
 
 const addTracksToRemoteStream = (stream, remoteStream) => {
@@ -41,6 +41,40 @@ const createOffer = async (peerConnection) => {
   })
 }; //ends
 
+const createAnswer = async (peerConnection, offerObj) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const answer = await peerConnection.createAnswer({}); //just to make the docs happy
+      await peerConnection.setLocalDescription(answer); //this is CLIENT2, and CLIENT2 uses the answer as the localDesc
+      console.log(offerObj)
+      console.log(answer)
+      // console.log(peerConnection.signalingState) //should be have-local-pranswer because CLIENT2 has set its local desc to it's answer (but it won't be)
+      //add the answer to the offerObj so the server knows which offer this is related to
+      offerObj.answer = answer
+      //emit the answer to the signaling server, so it can emit to CLIENT1
+      //expect a response from the server with the already existing ICE candidates
+      // const offerIceCandidates = await socket.emitWithAck('newAnswer', offerObj)
+      // offerIceCandidates.forEach(c => {
+      //   peerConnection.addIceCandidate(c);
+      //   console.log("======Added Ice Candidate======")
+      // })
+      // console.log(offerIceCandidates)
+      return resolve(true, 'answer created successfully', { answer, offerObj }, statusCodes.SUCCESS);
+    } catch (err) {
+      // console.log(err, "error offer")
+      return reject(false, err?.message, null, statusCodes.ERROR);
+    }
+  })
+}; //ends
+
+
+const addAnswer = async (peerConnection, offerObj) => {
+  //addAnswer is called in socketListeners when an answerResponse is emitted.
+  //at this point, the offer and answer have been exchanged!
+  //now CLIENT1 needs to set the remote
+  await peerConnection.setRemoteDescription(offerObj.answer)
+  // console.log(peerConnection.signalingState)
+}
 
 
 const createPeerConnection = (peerConfiguration, localStream, offerObj = null) => { //offer obj is optional
@@ -121,4 +155,6 @@ export {
   createPeerConnection,
   addTracksToPeerConnection,
   createOffer,
+  createAnswer,
+  addAnswer,
 };
