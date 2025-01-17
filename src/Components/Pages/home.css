@@ -1,31 +1,14 @@
 .videos {
-  height: 100vh;
-}
-
-#video-player {
-  background-color: black;
-  height: 450px;
-  width: 650px;
-}
-
-.video-wrapper {
   display: flex;
   margin: auto;
-  gap: 2rem;
-  /* background-color: blueviolet; */
+  height: 100vh;
   justify-content: center;
+  gap: 27px;
   margin-top: 20px;
 }
 
-.error-message {
-  display: flex;
-  margin: auto;
-  justify-content: center;
-  margin-top: 15px;
-  font-size: x-large;
-  background: burlywood;
-}
-
-.error-message p {
-  color: red;
+.videos video {
+  background-color: black;
+  height: 370px;
+  width: 515px;
 }

@@ -1,15 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import style from "./home.css";
 import * as WebrtcHelper from "../WebrtcHelper";
 import { peerConfiguration } from "../../Constant.js/Constant";
+import { io } from "socket.io-client";
+import { initializeSocket } from "../Socket.listener";
+
+
 export const Home = () => {
   const [localStream, setLocalStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
   const [didiIOffer, setDidIOffer] = useState(false);
+  const localVideoRef = useRef(null);
+  const remoteVideoRef = useRef(null);
 
   useEffect(() => {
-    startCall()
+    const socket = initializeSocket(io);
+    socket.on("ready", startCall); // Example: listen for signaling readiness
+
+    return () => {
+      socket.disconnect(); // Clean up on component unmount
+    };
+
   }, []);
+
+  useEffect(() => {
+    if (localVideoRef.current && localStream) {
+      localVideoRef.current.srcObject = localStream;
+    }
+    if (remoteVideoRef.current && remoteStream) {
+      remoteVideoRef.current.srcObject = remoteStream;
+    }
+  }, [localStream, remoteStream])
+
 
   const startCall = async () => {
     try {
@@ -40,33 +62,8 @@ export const Home = () => {
   return (
     <div>
       <div className="videos">
-        <div className="video-wrapper">
-          {/* video player 1 */}
-          <video
-            autoPlay
-            playsInline
-            muted
-            className="local-video"
-            id="video-player"
-            ref={(video) => {
-              if (video && localStream) {
-                video.srcObject = localStream; // add local stream to the video player
-              }
-            }}
-          />
-          {/* video player 2 */}
-          <video
-            autoPlay
-            playsInline
-            className="remote-video"
-            id="video-player"
-            ref={(video) => {
-              if (video && remoteStream) {
-                video.srcObject = remoteStream; // add local stream to the video player
-              }
-            }}
-          />
-        </div>
+        <video autoPlay playsInline muted className="local-video" ref={localVideoRef} />
+        <video autoPlay playsInline className="remote-video" ref={remoteVideoRef} />
       </div>
     </div>
   );

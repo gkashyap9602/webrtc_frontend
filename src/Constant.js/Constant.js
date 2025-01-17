@@ -32,4 +32,8 @@ const statusCodes = {
     ERROR: 400,                // bad request
 }
 
-export { showResponse, peerConfiguration, statusCodes }
+
+// Replace with your server's URL
+const SOCKET_SERVER_URL = "https://192.168.0.137:8181";
+
+export { showResponse, peerConfiguration, statusCodes, SOCKET_SERVER_URL }

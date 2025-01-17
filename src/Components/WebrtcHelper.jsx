@@ -58,7 +58,23 @@ const createPeerConnection = (peerConfiguration, localStream, offerObj = null) =
       //STEP 2 : add event listeners for peerconnection state changes
       peerConnection.addEventListener("signalingstatechange", (event) => {
         // console.log(event, "event-signalingstatechange");
-        console.log(peerConnection.signalingState, 'signalingstatechange');
+        switch (peerConnection.signalingState) {
+          case "stable":
+            console.log("Connection is stable.");
+            break;
+          case "have-local-offer":
+            console.log("A local offer has been created and set.");
+            break;
+          case "have-remote-offer":
+            console.log("A remote offer has been received and set.");
+            break;
+          case "closed":
+            console.log("The connection has been closed.");
+            break;
+          default:
+            console.log("Signaling state changed:", peerConnection.signalingState);
+        }
+        // console.log(peerConnection.signalingState, 'signalingstatechange');
       });
 
       //STEP 3 : add event listeners for ice candidates
