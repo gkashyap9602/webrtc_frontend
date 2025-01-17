@@ -1,4 +1,3 @@
-
 const peerConfiguration = {
     iceServers: [
         {
@@ -34,6 +33,7 @@ const statusCodes = {
 
 
 // Replace with your server's URL
-const SOCKET_SERVER_URL = "https://192.168.0.137:8181";
+const SOCKET_SERVER_URL1 = "https://192.168.0.137:8181";
+const SOCKET_SERVER_URL2 = "https://192.168.1.104:8181";
 
-export { showResponse, peerConfiguration, statusCodes, SOCKET_SERVER_URL }
+export { showResponse, peerConfiguration, statusCodes, SOCKET_SERVER_URL1, SOCKET_SERVER_URL2 }

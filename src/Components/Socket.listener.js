@@ -1,4 +1,4 @@
-import { SOCKET_SERVER_URL } from "../Constant.js/Constant";
+import { SOCKET_SERVER_URL1, SOCKET_SERVER_URL2 } from "../Constant.js/Constant";
 
 const userName = "User-" + Math.floor(Math.random() * 100000)
 const password = "solution";
@@ -6,7 +6,7 @@ const password = "solution";
 
 const initializeSocket = (io) => {
     //if trying it on a phone, use this instead...
-    const socket = io.connect(SOCKET_SERVER_URL, {
+    const socket = io.connect(SOCKET_SERVER_URL2, {
         // const socket = io.connect('https://localhost:8181/',{
         auth: {
             userName, password
