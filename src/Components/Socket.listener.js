@@ -6,7 +6,7 @@ const password = "solution";
 
 const initializeSocket = (io) => {
     //if trying it on a phone, use this instead...
-    const socket = io.connect(SOCKET_SERVER_URL2, {
+    const socket = io.connect(SOCKET_SERVER_URL1, {
         // const socket = io.connect('https://localhost:8181/',{
         auth: {
             userName, password
