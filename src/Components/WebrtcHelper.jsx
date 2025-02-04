@@ -24,7 +24,7 @@ const addTracksToRemoteStream = (stream, remoteStream) => {
 }; //ends
 
 
-const createOffer = async (peerConnection) => {
+const createOffer = async (peerConnection, socket) => {
   return new Promise(async (resolve, reject) => {
     try {
       console.log("Creating offer...")
@@ -32,7 +32,7 @@ const createOffer = async (peerConnection) => {
       // console.log(offer,"offer");
       peerConnection.setLocalDescription(offer);
       // didIOffer = true;
-      // socket.emit('newOffer', offer); //send offer to signalingServer
+      socket.emit('newOffer', offer); //send offer to signaling Server
       return resolve(true, 'offer created successfully', offer, statusCodes.SUCCESS);
     } catch (err) {
       // console.log(err, "error offer")
@@ -41,29 +41,29 @@ const createOffer = async (peerConnection) => {
   })
 }; //ends
 
-const createAnswer = async (peerConnection, offerObj) => {
+const createAnswer = async (peerConnection, offerObj, socket) => {
   return new Promise(async (resolve, reject) => {
-    try {
+    // try {
       const answer = await peerConnection.createAnswer({}); //just to make the docs happy
       await peerConnection.setLocalDescription(answer); //this is CLIENT2, and CLIENT2 uses the answer as the localDesc
-      console.log(offerObj)
-      console.log(answer)
-      // console.log(peerConnection.signalingState) //should be have-local-pranswer because CLIENT2 has set its local desc to it's answer (but it won't be)
+      console.log(offerObj, "offerObj")
+      console.log(answer, "answer")
       //add the answer to the offerObj so the server knows which offer this is related to
       offerObj.answer = answer
       //emit the answer to the signaling server, so it can emit to CLIENT1
       //expect a response from the server with the already existing ICE candidates
-      // const offerIceCandidates = await socket.emitWithAck('newAnswer', offerObj)
-      // offerIceCandidates.forEach(c => {
-      //   peerConnection.addIceCandidate(c);
-      //   console.log("======Added Ice Candidate======")
-      // })
-      // console.log(offerIceCandidates)
+      const offerIceCandidates = await socket.emitWithAck('newAnswer', offerObj)
+      console.log(offerIceCandidates,"offericecandidatess")
+      offerIceCandidates.forEach(c => {
+        peerConnection.addIceCandidate(c);
+        console.log("======Added Ice Candidate======")
+      })
+      console.log(offerIceCandidates, "offerIceCandidates")
       return resolve(true, 'answer created successfully', { answer, offerObj }, statusCodes.SUCCESS);
-    } catch (err) {
-      // console.log(err, "error offer")
-      return reject(false, err?.message, null, statusCodes.ERROR);
-    }
+    // } catch (err) {
+    //   // console.log(err, "error offer")
+    //   return reject(false, err?.message, null, statusCodes.ERROR);
+    // }
   })
 }; //ends
 
@@ -76,8 +76,13 @@ const addAnswer = async (peerConnection, offerObj) => {
   // console.log(peerConnection.signalingState)
 }
 
+const addNewIceCandidate = async (peerConnection, iceCandidate) => {
+  await peerConnection.addIceCandidate(iceCandidate)
+  console.log("******Ice Candidate Added*****")
+}
 
-const createPeerConnection = (peerConfiguration, localStream, offerObj = null) => { //offer obj is optional
+
+const createPeerConnection = (peerConfiguration, localStream, socket, userName, didIOffer = false, offerObj = null) => { //offer obj is optional
   return new Promise(async (resolve, reject) => {
     try {
       //RTCPeerConnection is the thing that creates the connection
@@ -117,11 +122,11 @@ const createPeerConnection = (peerConfiguration, localStream, offerObj = null) =
         // console.log(event, "event-onicecandidate");
         if (event.candidate) {
           console.log("New Ice Candidate found!......", event.candidate);
-          //     socket.emit("sendIceCandidateToSignalingServer", {
-          //       iceCandidate: e.candidate,
-          //       iceUserName: userName,
-          //       didIOffer,
-          //     });
+          socket.emit("sendIceCandidateToSignalingServer", {
+            iceCandidate: event.candidate,
+            iceUserName: userName,
+            didIOffer
+          });
         }
       });
 
@@ -157,4 +162,5 @@ export {
   createOffer,
   createAnswer,
   addAnswer,
+  addNewIceCandidate
 };
