@@ -158,7 +158,7 @@ export const Peer2Peer = () => {
         </div>
 
         <div className="control-container" id="mic-btn">
-          <img src={micPng} alt="Microphone" onClick={toggleCamera} />
+          <img src={micPng} alt="Microphone" onClick={toggleMic} />
         </div>
 
         <div className="control-container" id="leave-btn" >
