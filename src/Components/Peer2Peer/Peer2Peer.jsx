@@ -153,16 +153,16 @@ export const Peer2Peer = () => {
         <video ref={remoteVideoRef} autoPlay playsInline className="video-player" />
       </div>
       <div id="controls">
-        <div className="control-container" id="camera-btn" onClick={toggleCamera}>
-          <img src={cameraPng} alt="Camera" />
+        <div className="control-container" id="camera-btn" >
+          <img src={cameraPng} alt="Camera" onClick={toggleCamera} />
         </div>
 
-        <div className="control-container" id="mic-btn" onClick={toggleCamera}>
-          <img src={micPng} alt="Microphone" />
+        <div className="control-container" id="mic-btn">
+          <img src={micPng} alt="Microphone" onClick={toggleCamera} />
         </div>
 
-        <div className="control-container" id="leave-btn" onClick={leaveRoom}>
-          <img src={phonePng} alt="Leave" />
+        <div className="control-container" id="leave-btn" >
+          <img src={phonePng} alt="Leave" onClick={leaveRoom} />
         </div>
       </div>
     </div>
