@@ -4,8 +4,8 @@
 }
 
 .form-container{
-    width: 100%;
-    max-width: 1200px;
+    width: 90%;
+    max-width: 680px;
     border-radius: 10px;
     background-color: #262625;
     position: fixed;
