@@ -1,0 +1,46 @@
+.videos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Automatically adjusts columns */
+    gap: 10px; /* Adds a 10px gap between the videos */
+    margin-top: 20px;
+}
+
+.videos video {
+    background-color: black;
+    width: 100%;
+    max-width: 100%; /* Ensure it doesn't exceed the container's width */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px; /* For rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Adding shadow for a professional look */
+}
+
+/* Ensure the video element containers align properly */
+.peer-video {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Hover effect on button */
+.hangup-btn:hover {
+    background-color: #808891; /* Darker blue when hovered */
+}
+
+.hangup-btn{
+    margin-top: 20px;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #f34343; /* A professional blue color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle button shadow */
+    transition: background-color 0.3s ease;
+}
+button:focus {
+    outline: none;
+}
