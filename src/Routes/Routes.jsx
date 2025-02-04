@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Route, Routes as Switch, Navigate } from 'reac
 
 // Import your page components
 import { Home } from '../Components/Pages/Home';
-// import About from './pages/About';
-// import Contact from './pages/Contact';
+import { Peer2Peer } from '../Components/Peer2Peer/Peer2Peer';
+import { Lobby } from '../Components/Lobby/Lobby';
 // import NotFound from './pages/NotFound';
 
 export const Routes = () => {
@@ -12,7 +12,8 @@ export const Routes = () => {
         <Router>
             <Switch>
                 <Route path="/" element={<Home />} />
-                {/* <Route path="/about" element={<About />} /> */}
+                <Route path="/lobby" element={<Lobby />} />
+                <Route path="/peer2peer/:room" element={<Peer2Peer />} />
                 {/* <Route path="/contact" element={<Contact />} /> */}
                 {/* Redirect to home if route doesn't exist */}
                 {/* <Route path="*" element={<Navigate to="/" />} /> */}
