@@ -99,6 +99,10 @@ export const Peer2Peer = () => {
 
   const handleUserJoined = async () => {
     console.log("handleUserJoined")
+    // if (peerConnection.current) {
+    //   console.log("Peer connection already exists, skipping offer creation.");
+    //   return;
+    // }
     createPeerConnection();
     const offer = await peerConnection.current.createOffer();
     await peerConnection.current.setLocalDescription(offer);
