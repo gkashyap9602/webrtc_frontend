@@ -8,7 +8,8 @@ const AdminNFC = () => {
     const ws = useRef(null)
 
     useEffect(() => {
-        ws.current = new WebSocket("ws://localhost:8080");
+        ws.current = new WebSocket("ws://192.168.0.27:8080");
+        // ws.current = new WebSocket("ws://localhost:8080");
 
         ws.current.onopen = () => console.log("Connected to NFC WebSocket");
         ws.current.onmessage = (event) => {
@@ -39,8 +40,8 @@ const AdminNFC = () => {
 
     const writeCard = () => {
         console.log(writeText, "writeText", writeText.length)
-        if (writeText.length > 16) {
-            setStatus("Error: Max 16 characters allowed");
+        if (writeText.length > 24) {
+            setStatus("Error: Max 24 characters allowed");
             return;
         }
         ws.current.send(JSON.stringify({ command: "write", text: writeText }));

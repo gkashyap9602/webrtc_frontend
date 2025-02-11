@@ -99,19 +99,19 @@ export const Peer2Peer = () => {
 
   const handleUserJoined = async () => {
     console.log("handleUserJoined")
-    // if (peerConnection.current) {
-    //   console.log("Peer connection already exists, skipping offer creation.");
-    //   return;
-    // }
-    createPeerConnection();
+    if (peerConnection.current) {
+      console.log("Peer connection already exists, skipping offer creation.");
+      return;
+    }
+    await createPeerConnection();
     const offer = await peerConnection.current.createOffer();
     await peerConnection.current.setLocalDescription(offer);
-    socketRef.current.emit("offer", { roomId, offer });
+    socketRef.current.emit("offer", { roomId, offer, sender: socketRef.current.id });
   };
 
-  const handleOffer = async ({ offer }) => {
+  const handleOffer = async ({ sender, offer }) => {
     console.log("handleOffer")
-
+    if (socketRef.current.id === sender) return; // Ignore self messages
     createPeerConnection();
     await peerConnection.current.setRemoteDescription(offer);
     const answer = await peerConnection.current.createAnswer();
@@ -124,8 +124,16 @@ export const Peer2Peer = () => {
     await peerConnection.current.setRemoteDescription(answer);
   };
 
-  const handleCandidate = async ({ candidate }) => {
+  const handleCandidate = async ({ sender, candidate }) => {
     console.log('handleCandidate')
+
+    if (socketRef.current.id === sender) return; // Ignore self messages
+
+    if (!peerConnection.current) {
+      console.warn("PeerConnection not initialized yet");
+      return;
+    }
+
     await peerConnection.current.addIceCandidate(candidate);
   };
 
